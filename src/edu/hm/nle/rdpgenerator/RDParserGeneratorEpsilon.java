@@ -32,7 +32,7 @@ public class RDParserGeneratorEpsilon {
     /** Minimal size of the parser source code. */
     private static final int SRC_SIZE = 1660;
 
-    private static final char EPSILON = '#';
+    private static final char EPSILON = ' ';
     private static final char ESCAPE = '$';
 
     /**
