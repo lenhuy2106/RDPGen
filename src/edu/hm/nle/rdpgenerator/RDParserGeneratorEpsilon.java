@@ -207,29 +207,26 @@ public class RDParserGeneratorEpsilon {
                                 new HashSet() :
                                 symbolFirsts.get(symbolsA.charAt(iSymbols));
                         boolean hasEpsilon = firstS.contains(EPSILON);
-
-                        boolean isLastS = iSymbols == symbolsA.length();
+                        boolean noSLeft = iSymbols == symbolsA.length();
 
                         // follow: wiederhole für alle S...
                         while (hasEpsilon) {
                             firstS.remove(EPSILON);
                             followChanged |= symbolFollows.get(chrN).addAll(firstS);
                             firstS.add(EPSILON);
-                            isLastS = iSymbols == symbolsA.length();
+                            final boolean isLastS = iSymbols == symbolsA.length() - 1;
 
-                            if (!isLastS) {
-                                firstS = symbolsA.length() == 1 ?
-                                    new HashSet() :
-                                    symbolFirsts.get(symbolsA.charAt(++iSymbols));
-                                hasEpsilon = firstS.contains(EPSILON);
-//                                isLastS = true;
-                            } else {
+                            if (isLastS) {
                                 hasEpsilon = false;
+                                noSLeft = true;
+                            } else {
+                                firstS = symbolFirsts.get(symbolsA.charAt(++iSymbols));
+                                hasEpsilon = firstS.contains(EPSILON);
                             }
                         }
 
                         // follow: alle rightSide S durchlaufen...
-                        if (isLastS) {
+                        if (noSLeft) {
                             followChanged |= symbolFollows.get(chrN).addAll(
                                     symbolFollows.get(grammar[k][0].charAt(0)));
                         } else {
