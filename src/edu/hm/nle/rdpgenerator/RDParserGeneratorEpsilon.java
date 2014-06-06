@@ -142,9 +142,6 @@ public class RDParserGeneratorEpsilon {
                 if (Character.isUpperCase(chr)) {
                     symbolFollows.put(chr, new HashSet<>());
                 }
-                if (k == 0) {
-                    symbolFollows.get(chr).add(ESCAPE);
-                }
             }
 
             // rightSide
@@ -155,12 +152,15 @@ public class RDParserGeneratorEpsilon {
 
                     // first: first(t) <- {t}
                     if (Character.isUpperCase(chr)) {
-                        symbolFollows.putIfAbsent(chr, new HashSet<>());
+                        symbolFollows.put(chr, new HashSet<>());
                     } else {
                         symbolFirsts.get(chr).add(chr);
                     }
                 }
             }
+
+            // start symbol
+            symbolFollows.get(grammar[0][0].charAt(0)).add(ESCAPE);
         }
     }
 
