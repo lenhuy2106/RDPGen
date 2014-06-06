@@ -155,7 +155,7 @@ public class RDParserGeneratorEpsilon {
 
                     // first: first(t) <- {t}
                     if (Character.isUpperCase(chr)) {
-                        symbolFollows.put(chr, new HashSet<>());
+                        symbolFollows.putIfAbsent(chr, new HashSet<>());
                     } else {
                         symbolFirsts.get(chr).add(chr);
                     }
@@ -203,8 +203,11 @@ public class RDParserGeneratorEpsilon {
                     if (Character.isUpperCase(chrN)) {
                         int iSymbols = 0;
                         final String symbolsA = grammar[k][1].substring(iRightChr);
-                        HashSet firstS = symbolFirsts.get(symbolsA.charAt(iSymbols));
+                        HashSet firstS = symbolsA.equals("") ?
+                                new HashSet() :
+                                symbolFirsts.get(symbolsA.charAt(iSymbols));
                         boolean hasEpsilon = firstS.contains(EPSILON);
+
                         boolean isLastS = iSymbols == symbolsA.length();
 
                         // follow: wiederhole für alle S...
@@ -215,8 +218,13 @@ public class RDParserGeneratorEpsilon {
                             isLastS = iSymbols == symbolsA.length();
 
                             if (!isLastS) {
-                                firstS = symbolFirsts.get(symbolsA.charAt(++iSymbols));
+                                firstS = symbolsA.length() == 1 ?
+                                    new HashSet() :
+                                    symbolFirsts.get(symbolsA.charAt(++iSymbols));
                                 hasEpsilon = firstS.contains(EPSILON);
+//                                isLastS = true;
+                            } else {
+                                hasEpsilon = false;
                             }
                         }
 
